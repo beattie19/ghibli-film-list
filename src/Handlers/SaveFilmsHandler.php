@@ -2,24 +2,27 @@
 
 namespace App\Handlers;
 
+use App\Services\GhibliApiService\GhibliApi;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use App\Entity\Film;
 
 class SaveFilmsHandler {
 
-    private $client;
+    private $ghibliApiService;
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->client = HttpClient::create();
+    public function __construct(GhibliApi $ghibliApiService, EntityManagerInterface $entityManager) {
+        $this->ghibliApiService = $ghibliApiService;
         $this->entityManager = $entityManager;
     }
 
     public function getFilms() {
-        $response = $this->client->request('GET', 'https://ghibliapi.herokuapp.com/films');
-        $films = $response->toArray();
-        
+
+        $connection = $this->entityManager->getConnection();
+        $platform   = $connection->getDatabasePlatform();
+        $connection->executeUpdate($platform->getTruncateTableSQL('film', true));
+
+        $films = $this->ghibliApiService->getFilms();
         $this->saveFilmsToDatabase($films);
     }
 
