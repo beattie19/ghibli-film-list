@@ -2,16 +2,16 @@
 
 namespace App\Handlers;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use App\Entity\Film;
-use Doctrine\ORM\EntityManager;
 
 class SaveFilmsHandler {
 
     private $client;
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManagerInterface $entityManager) {
         $this->client = HttpClient::create();
         $this->entityManager = $entityManager;
     }
@@ -25,18 +25,17 @@ class SaveFilmsHandler {
 
     private function saveFilmsToDatabase(array $films) {
         foreach($films as $filmData) {
-            $entityManager = $this->getDoctrine()->getManager();
 
             $film = new Film();
             $film->setTitle($filmData['title']);
             $film->setDirector($filmData['director']);
-            $film->setReleaseData($filmData['release_date']);
+            $film->setReleaseDate($filmData['release_date']);
 
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
-            $entityManager->persist($film);
+            $this->entityManager->persist($film);
 
             // actually executes the queries (i.e. the INSERT query)
-            $entityManager->flush();
+            $this->entityManager->flush();
         }
     }
 }
