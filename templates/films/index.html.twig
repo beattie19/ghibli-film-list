@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Studio Ghibli Films!{% endblock %}
+
+{% block body %}
+    <link href="{{ asset('index.css') }}" rel="stylesheet">
+    <h1 class="main-title">Studio Ghibli Films | 株式会社スタジオジブリ</h1>
+
+    <div class="wrapper">
+
+        <div class="all-films">
+            {% for film in films %}
+                    <div class="film flip-box">
+                        <div class="flip-box-inner">
+                            <div class="flip-box-front">
+                                <img src={{ film.poster }} alt="">
+                            </div>
+                            <div class="flip-box-back film-wrapper">
+                                <h4 class="film-title">{{ film.title }}</h4>
+                                <p class="film-text">{{ film.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

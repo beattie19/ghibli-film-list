@@ -27,10 +27,20 @@ class Film
      */
     private $director;
 
-        /**
+    /**
      * @ORM\Column(type="integer")
      */
     private $releaseDate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $poster;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $description;
 
     /**
      * @return mixed
@@ -86,5 +96,37 @@ class Film
     public function setReleaseDate($releaseDate)
     {
         $this->releaseDate = $releaseDate;
+    }
+
+    /**
+     * @return void
+     */
+    public function setPoster($poster)
+    {
+        $this->poster = $poster;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPoster()
+    {
+        return $this->poster;
+    }
+
+    /**
+     * @return void
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

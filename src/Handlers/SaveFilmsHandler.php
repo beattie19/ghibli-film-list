@@ -17,13 +17,17 @@ class SaveFilmsHandler {
     }
 
     public function getFilms() {
-
-        $connection = $this->entityManager->getConnection();
-        $platform   = $connection->getDatabasePlatform();
-        $connection->executeUpdate($platform->getTruncateTableSQL('film', true));
+        $this->truncateFilmTable();
 
         $films = $this->ghibliApiService->getFilms();
         $this->saveFilmsToDatabase($films);
+    }
+
+    private function truncateFilmTable()
+    {
+        $connection = $this->entityManager->getConnection();
+        $platform   = $connection->getDatabasePlatform();
+        $connection->executeUpdate($platform->getTruncateTableSQL('film', true));
     }
 
     private function saveFilmsToDatabase(array $films) {
@@ -33,6 +37,7 @@ class SaveFilmsHandler {
             $film->setTitle($filmData['title']);
             $film->setDirector($filmData['director']);
             $film->setReleaseDate($filmData['release_date']);
+            $film->setDescription($filmData['description']);
 
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
             $this->entityManager->persist($film);
